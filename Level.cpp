@@ -1,14 +1,16 @@
 // project includes
 #include "Level.h"
-
+#include "Framework/AssetManager.h"
 
 // library includes
 #include <iostream>
 #include <fstream>
 
 Level::Level()
-	: m_currentLevel(0)
-
+	: m_cellSize(64.0f)
+	, m_currentLevel(0)
+	, m_background()
+	
 {
 	LoadLevel(1);
 }
@@ -21,7 +23,13 @@ void Level::Draw(sf::RenderTarget& _target)
 	// Draw game world to the window
 	_target.setView(camera);
 	// TODO: Draw game objects
-
+	for (int y = 0; y < m_background.size(); ++y)
+	{
+		for (int x = 0; x < m_background[y].size(); ++x)
+		{
+			_target.draw(m_background[y][x]);
+		}
+	}
 	
 	// Reset view
 	_target.setView(_target.getDefaultView());
@@ -42,7 +50,8 @@ void Level::LoadLevel(int _levelToLoad)
 	// TODO
 
 	// clear out our lists
-	// TODO
+	m_background.clear();
+
 
 	// set the current level
 	m_currentLevel = _levelToLoad;
@@ -62,16 +71,13 @@ void Level::LoadLevel(int _levelToLoad)
 	}
 
 	// set the starting x and y coordinates used to position level objects
-	float x = 0.0f;
-	float y = 0.0f;
+	int x = 0;
+	int y = 0;
 
-	// Define the spacng we will use for our grid
-	const float X_SPACE = 100.0f;
-	const float Y_SPACE = 100.0f;
+	// create the first row in our grid
+	m_background.push_back(std::vector<sf::Sprite>());
 
-	// create the player first as other objects will need to reference it
 	
-
 	// read each character one by one from the file
 	char ch;
 	// each time, try to read the next character
@@ -85,32 +91,42 @@ void Level::LoadLevel(int _levelToLoad)
 
 		if (ch == ' ')
 		{
-			x += X_SPACE;
+			++x;
 		}
 		else if (ch == '\n')
 		{
-			y += Y_SPACE;
+			++y;
 			x = 0;
-		}
-		
-		else if (ch == '-')
-		{
-			// do no - empty space
+
+			// create a new row in our grid
+			m_background.push_back(std::vector<sf::Sprite>());
+
+
 		}
 		else
 		{
-			std::cerr << "Unrecognised character in level file: " << ch;
+			// this is going to be some object or empty space
+			// create background sprite
+			m_background[y].push_back(sf::Sprite(AssetManager::GetTexture("graphics/ground.png")));
+			m_background[y][x].setPosition(x*m_cellSize, y*m_cellSize);
+
+			if (ch == '-')
+			{
+				// do no - empty space
+			}
+			else
+			{
+				std::cerr << "Unrecognised character in level file: " << ch;
+			}
 		}
+
+
 	}
 
 	// close the file now that we are done with it
 	inFile.close();
-
 			
-	/*Baddy* baddy = new Baddy();
-	m_updateList.push_back(baddy);
-	m_drawListWorld.push_back(baddy); */
-
+	
 	// score - position not dependant on level
 	
 }
