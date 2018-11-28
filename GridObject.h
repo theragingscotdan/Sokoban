@@ -15,13 +15,13 @@ public:
 
 	GridObject();
 
-	void setGridPosition(sf::Vector2i _newPosition);
-	void setGridPosition(int _x, int _y);
+	void SetGridPosition(sf::Vector2i _newPosition);
+	void SetGridPosition(int _x, int _y);
 	
 	void SetLevel(Level* _newLevel);
 
-
-private:
+	sf::Vector2i GetGridPosition();
+protected:
 
 	sf::Vector2i m_gridPosition;
 	Level* m_level;
