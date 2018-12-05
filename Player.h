@@ -2,6 +2,7 @@
 
 // project includes
 #include "GridObject.h"
+#include <SFML/Audio.hpp>
 
 class Player : public GridObject
 {
@@ -24,5 +25,6 @@ private:
 private:
 
 	sf::Vector2i m_pendingMove;
+	sf::Sound m_sound;
 
 };

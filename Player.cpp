@@ -5,9 +5,11 @@
 
 Player::Player()
 	: GridObject()
-	, m_pendingMove(0,0)
+	, m_pendingMove(0, 0)
+	, m_sound()
 {
 	m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandDown.png"));
+	m_sound.setBuffer(AssetManager::GetSoundBuffer("audio/footstep1.ogg"));
 };
 
 void Player::Input(sf::Event _gameEvent)
@@ -61,8 +63,14 @@ void Player::Update(sf::Time _frameTime)
 	if (m_pendingMove.x != 0 || m_pendingMove.y != 0)
 	{
 		// move in that direction
-		AttemptMove(m_pendingMove);
+		bool moveSuccessful = AttemptMove(m_pendingMove);
 
+		// play movement sound
+		if (moveSuccessful)
+		{
+			m_sound.play();
+		}
+		
 		// and clear the pending movement
 		m_pendingMove = sf::Vector2i(0, 0);
 
@@ -77,9 +85,11 @@ bool Player::AttemptMove(sf::Vector2i _direction)
 	// Get current position
 	//Calculate target position
 	sf::Vector2i targetPos = m_gridPosition + _direction;
+	
 
 	// TODO: check if the space is empty
 
 	// If empty, move there
 	return m_level->MoveObjectTo(this, targetPos);
+	
 }
