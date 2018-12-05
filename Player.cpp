@@ -10,6 +10,7 @@ Player::Player()
 {
 	m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandDown.png"));
 	m_sound.setBuffer(AssetManager::GetSoundBuffer("audio/footstep1.ogg"));
+	m_bumpSound.setBuffer(AssetManager::GetSoundBuffer("audio/bump.wav"));
 };
 
 void Player::Input(sf::Event _gameEvent)
@@ -98,6 +99,7 @@ bool Player::AttemptMove(sf::Vector2i _direction)
 		if (targetCellContents[i]->GetBlocksMovement() == true)
 		{
 			blocked = true;
+			m_bumpSound.play();
 		}
 			
 	}
