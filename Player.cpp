@@ -27,6 +27,7 @@ void Player::Input(sf::Event _gameEvent)
 			// it was W!
 			// Move up
 			m_pendingMove = sf::Vector2i(0, -1);
+			m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandUp.png"));
 			
 		}
 		else if (_gameEvent.key.code == sf::Keyboard::A)
@@ -34,18 +35,21 @@ void Player::Input(sf::Event _gameEvent)
 			// it was A!
 			// Move left
 			m_pendingMove = (sf::Vector2i(-1, 0));
+			m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandLeft.png"));
 		}
 		else if (_gameEvent.key.code == sf::Keyboard::S)
 		{
 			// it was S!
-			// Move right
+			// Move down
 			m_pendingMove = (sf::Vector2i(0, 1));
+			m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandDown.png"));
 		}
 		else if (_gameEvent.key.code == sf::Keyboard::D)
 		{
 			// it was D!
-			// Move down
+			// Move right
 			m_pendingMove = (sf::Vector2i(1, 0));
+			m_sprite.setTexture(AssetManager::GetTexture("graphics/player/playerStandRight.png"));
 		}
 	}
 }
