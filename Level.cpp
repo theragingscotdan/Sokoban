@@ -13,6 +13,7 @@
 Level::Level()
 	: m_cellSize(64.0f)
 	, m_currentLevel(0)
+	, m_pendingLevel(0)
 	, m_background()
 	, m_contents()
 	
@@ -71,6 +72,17 @@ void Level::Update(sf::Time _frameTime)
 			}
 		}
 	}
+
+	// IF there is a pending level waiting... 
+	if (m_pendingLevel != 0)
+	{
+		// load it
+		LoadLevel(m_pendingLevel);
+		// remove pending level
+		m_pendingLevel = 0;
+	}
+	
+
 	
 }
 void Level::Input(sf::Event _gameEvent)
@@ -295,4 +307,54 @@ std::vector < GridObject* > Level::GetObjectAt(sf::Vector2i _targetPos)
 	// return an empty vector with nothing in it
 	// (default constructor)
 	return std::vector<GridObject*>();
+}
+
+bool Level::CheckComplete()
+{
+	// loop through and check all boxes to see if see if they are stored
+	// rows
+	for (int y = 0; y < m_contents.size(); ++y)
+	{
+		// cells
+		for (int x = 0; x < m_contents[y].size(); ++x)
+		{
+			// sticky outie (grid objects)
+			for (int z = 0; z < m_contents[y][x].size(); ++z)
+			{
+				// current object we are examining in the loop
+				GridObject* thisObject = m_contents[y][x][z];
+
+				// check if it is a box via dynamic cast
+				Box* boxObject = dynamic_cast<Box*>(thisObject);
+
+				if (boxObject != nullptr)
+				{
+					// IT WAS a box
+
+					// is it stored?
+					if (boxObject->GetStored() == false)
+					{
+						// NOT stored
+
+						// any single box being unstored
+						// means the whole level is NOT complete
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	// all boxes were stored! (none we unstored
+	// so we completed the level
+
+	// TODO: Play victory music!
+
+	// queue the next level to load during the next update
+	// (if we do it right way, we get an access violation
+	// due to update still running)
+	m_pendingLevel = m_currentLevel + 1;
+
+	// The level is complete so return true
+	return true;
 }

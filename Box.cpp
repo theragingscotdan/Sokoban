@@ -64,6 +64,9 @@ bool Box::AttemptPush(sf::Vector2i _direction)
 					// we are stored!
 					m_stored = true;
 				}
+
+				// check level the level is complete!
+				m_level->CheckComplete();
 			}
 
 			// and change our sprite
@@ -81,4 +84,9 @@ bool Box::AttemptPush(sf::Vector2i _direction)
 
 		return moveSucceeded;
 	}
+}
+
+bool Box::GetStored()
+{
+	return m_stored;
 }
