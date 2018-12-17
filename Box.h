@@ -3,6 +3,9 @@
 // project includes
 #include "GridObject.h"
 
+//Library includes
+#include "SFML/Audio.hpp"
+
 class Box : public GridObject
 {
 
@@ -12,5 +15,10 @@ public:
 
 	bool AttemptPush(sf::Vector2i _direction);
 
+
+private:
+	bool m_stored;
+
+	sf::Sound m_storeSound;
 
 };
